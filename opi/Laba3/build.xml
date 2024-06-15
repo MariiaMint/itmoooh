@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<project name="Laba3" default="compile">
+
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="C:\Users\Мария\Desktop\itmoooh\web\Laba3\ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+
+    <property file="build.properties"/>
+
+    <path id="compile.path">
+        <fileset dir="${lib.main.dir}" includes="**/*.jar"/>
+    </path>
+
+    <path id="classpath.main">
+        <pathelement path="lib/some-library.jar"/>
+        <fileset dir="src/main/java" includes="**/*.java"/>
+    </path>
+
+    <path id="classpath.test">
+        <pathelement location="${lib.test.dir}/junit-4.13.2.jar"/>
+        <pathelement location="${lib.test.dir}/hamcrest-core-1.3.jar"/>
+        <pathelement location="${build.classes.main.dir}"/>
+        <pathelement location="${build.classes.test.dir}"/>
+    </path>
+
+    <path id="classpath.source">
+        <fileset dir="${src.main.dir}" includes="**/*.java"/>
+    </path>
+
+    <target name="compile">
+            <mkdir dir="${build.classes.dir}"/>
+        <javac srcdir="${src.main.dir}/java" destdir="${build.classes.main.dir}" includeantruntime="false">
+            <classpath>
+                <fileset dir="${lib.main.dir}">
+                    <include name="**/*.jar"/>
+                </fileset>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="build" depends="compile">
+        <echo message="Создание JAR"/>
+        <jar destfile="${build.dir}/${jar.file.name}" basedir="${build.classes.main.dir}"/>
+
+        <echo message="Создание WAR"/>
+        <war destfile="${build.dir}/${war.file.name}" webxml="${basedir}/src/main/webapp/WEB-INF/web.xml">
+            <fileset dir="${basedir}/src/main/webapp">
+                <exclude name="WEB-INF/**"/>
+            </fileset>
+            <fileset dir="${basedir}/src/main/webapp/WEB-INF">
+                <include name="**/*"/>
+            </fileset>
+            <lib dir="${basedir}/lib"/>
+        </war>
+    </target>
+
+    <target name="clean">
+        <echo>Удаление артефактов...</echo>
+        <delete dir="${build.dir}"/>
+        <delete dir="${web.classes.dir}"/>
+        <delete dir="${web.lib.dir}"/>
+        <delete file="${war.file.name}"/>
+        <delete file="${jar.file.name}"/>
+    </target>
+
+    <target name="deploy" depends="build">
+        <copy file="${build.dir}/${war.file.name}"
+              tofile="C:/Users/Мария/Desktop/Мучёба/Веб/вайлдфлаи_лаб3/wildfly-30.0.0.Final/standalone/deployments/${war.file.name}"/>
+        <exec executable="cmd.exe">
+            <arg line="/c start C:/Users/Мария/Desktop/Мучёба/Веб/вайлдфлаи_лаб3/wildfly-30.0.0.Final/bin/standalone.bat"/>
+        </exec>
+    </target>
+
+    <target name="test" depends="testcompile">
+        <junit printsummary="on" haltonfailure="yes" fork="true">
+            <classpath>
+                <path refid="classpath.test"/>
+            </classpath>
+            <formatter type="brief" usefile="false"/>
+            <batchtest>
+                <fileset dir="${src.test.dir}" includes="**/*Test.java"/>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="testcompile" depends="compile">
+        <mkdir dir="${build.classes.test.dir}"/>
+        <javac srcdir="${src.test.dir}" destdir="${build.classes.test.dir}">
+            <classpath refid="classpath.test"/>
+            <classpath refid="classpath.main"/>
+        </javac>
+    </target>
+
+    <target name="javadoc" depends="build">
+        <delete dir="${doc.dir}"/>
+        <mkdir dir="${doc.dir}"/>
+        <javadoc destdir="${doc.dir}">
+            <classpath refid="classpath.source"/>
+            <classpath refid="classpath.test"/>
+            <fileset dir="${src.dir}" includes="**/*.java"/>
+        </javadoc>
+    </target>
+
+    <target name="doc" depends="javadoc">
+        <jar destfile="${build.dir}/${ant.project.name}.jar" update="true">
+            <fileset dir="." includes="${doc.dir}/**"/>
+        </jar>
+
+        <signjar alias="web3"
+                 storepass="webWeb"
+                 keystore="${keystore}"
+                 sigalg="MD5withRSA"
+                 digestalg="SHA1">
+            <path>
+                <file file="${build.dir}/${ant.project.name}.jar"/>
+            </path>
+        </signjar>
+    </target>
+
+<!--    <target name="team">-->
+<!--        <exec executable="svn">-->
+<!--            <arg line="update"/>-->
+<!--        </exec>-->
+
+<!--        <exec executable="svn" outputproperty="svn_revision">-->
+<!--            <arg line="info &#45;&#45;show-item revision"/>-->
+<!--        </exec>-->
+
+<!--        <for list="1,2,3" param="offset">-->
+<!--            <sequential>-->
+<!--                <antcall target="clean"/>-->
+<!--                <antcall target="build"/>-->
+<!--                <move file="${diSst.jar}" todir="${team.dir}"/>-->
+<!--                <move file="${team.dir}/${dist.jar.name}" tofile="${team.dir}/@{offset}.jar"/>-->
+<!--                <math result="svn_revision">-->
+<!--                    <op datatype="int" op="-">-->
+<!--                        <num value="${svn_revision}"/>-->
+<!--                        <num value="1"/>-->
+<!--                    </op>-->
+<!--                </math>-->
+<!--            </sequential>-->
+<!--        </for>-->
+
+<!--        <zip destfile="${dist.dir}/jars.zip"-->
+<!--             basedir="${team.dir}"/>S-->
+<!--    </target>-->
+
+
+</project>

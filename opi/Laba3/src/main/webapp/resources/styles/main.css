@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    background-image: url("#{resource['images/paintingShip.jpg']}");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    color: rgb(168 154 128) !important;
+
+}
+
+a {
+    text-decoration: none;
+    color: rgb(168 154 128) !important;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6, a {
+    color: black;
+}
+
+img {
+    border-radius: 5px;
+    width: 60%;
+}
+
+button {
+    width: 165px;
+    margin-top: 10px;
+}
+
+.content {
+    min-height: 100%;
+}
+
+.header {
+    background-color: #2222227d;
+    text-align: left;
+    padding: 1% 0;
+}
+
+.header h1 {
+    font-family: cursive;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 55px;
+    line-height: 57px;
+    padding-bottom: 1%;
+}
+
+.header h1 > a:hover {
+    color: rgb(168 154 128) !important;
+}
+
+.header * {
+    text-decoration: none;
+    color: rgb(168 154 128) !important;
+}
+
+.wrapper {
+    min-height: 100vh;
+    padding: 5%;
+}
+
+select, input {
+    text-align: center !important;
+}
+
+/*_*/
+
+.styled-input {
+    background-color: #0000007d !important;
+    color: rgb(255 226 94) !important;
+    width: 100%;
+}
+
+body .ui-spinner .ui-spinner-input {
+    background-color: #0000007d !important;
+    color: rgb(255 226 94) !important;
+}
+
+body .ui-button {
+    background-color: #0000007d !important;
+    color: rgb(255 226 94) !important;
+    border: 2px #676767 !important;
+}
+
+
+.class-form {
+    background-color: #2222227d;
+    color: #eec55f;
+}
+
+.custom-link {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px; /* Выравнивание текста по центру */
+    text-align: center;
+    border-radius: 50%; /* Создание круглой формы */
+    background-color: #EEC55FFF; /* Цвет фона кружочка */
+    color: #2d2f36; /* Цвет текста внутри кружочка */
+    text-decoration: none; /* Убираем стандартное подчеркивание */
+    margin-left: 1%;
+}
+
+/* Стили для изменения внешнего вида при наведении */
+.custom-link:hover {
+    background-color: #937a3c; /* Изменение цвета фона при наведении */
+    text-decoration: none;
+}
+
+.selected-link {
+    background-color: #937a3c; /* Изменение цвета фона при наведении */
+    text-decoration: none;
+}
+
+body .ui-datatable thead th {
+    background-color: rgba(34, 34, 34, 0.62);
+    color: #eec55f;
+}
+
+body .ui-datatable .ui-datatable-data>tr {
+    background-color: #2222227d;
+    color: #eec55f;
+}
+
+
+/*_*/
+
+footer {
+    color: #a1a1a1 !important;
+    background-color: #222;
+    padding: 2% 0%;
+    border-top: 1px solid #000;
+    text-align: center;
+}
+
+footer h6 {
+    color: rgb(168 154 128) !important;
+}
+
+footer a {
+    color: #a1a1a1 !important;
+}
+
+
+@media (max-width: 480px) {
+
+    img {
+        margin: 0 0 5% 0;
+    }
+
+    table {
+        margin: 5% 0 0 0;
+    }
+
+}

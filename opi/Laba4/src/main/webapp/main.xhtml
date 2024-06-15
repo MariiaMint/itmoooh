@@ -1,0 +1,112 @@
+<ui:composition template="/WEB-INF/templates/base_template.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:pt="jakarta.faces.passthrough"
+                xmlns:p="http://primefaces.org/ui">
+    <ui:param name="title" value="Лаба 3 (вычислятор)"/>
+
+    <ui:define name="content">
+
+        <div class="col-md-5">
+            <div class="plot">
+                <canvas class="graph-canvas_points" id="canvas" width="400" height="400"/>
+            </div>
+        </div>
+
+        <div class="col-md-2 class-form">
+            <h:form id="data-form">
+                <div class="form-group">
+                    <label><b>Изменение X</b></label>
+                    <br/>
+                    <p:spinner value="#{resultHandler.x}"
+                               min="-5"
+                               max="5"
+                               step="1"
+                               styleClass="styled-input"
+                               id="x" required="true" onkeydown="return false;"
+                               onchange="changeXValue(this.value); updateHiddenFields(); saveFormData();"/>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="y"><b>Изменение Y:</b></label>
+                    <br/>
+                    <p:inputText id="y" required="true" value="#{resultHandler.y}"
+                                 styleClass="styled-input" pt:placeholder="[-3.0; 3.0]"
+                                 pt:pattern="(?:-5|\+?3)(?:[.,]0{1,16})?|(?:-[43210]|\+?[012])(?:[.,]\d{1,16})?"
+                                 converter="tools.YCoordinateConverter"
+                                 oninput="changeYValue(this.value); updateHiddenFields(); saveFormData()"
+                    />
+                    <br/><h:outputText value="диапазон: [-3.0; 3.0]"/>
+                    <br/><h:outputText value="до 15 знаков после запятой"/>
+                </div>
+
+                <div class="form-group">
+                    <label><b>Изменение R:</b></label>
+                    <br/>
+                    <h:commandLink value="1" styleClass="custom-link" onclick="handleRSelection(1, this); saveFormData(); return false;" ></h:commandLink>
+                    <h:commandLink value="2" styleClass="custom-link" onclick="handleRSelection(2, this); saveFormData(); return false;"></h:commandLink>
+                    <h:commandLink value="3" styleClass="custom-link" onclick="handleRSelection(3, this); saveFormData(); return false;"></h:commandLink>
+                    <h:commandLink value="4" styleClass="custom-link" onclick="handleRSelection(4, this); saveFormData(); return false;"></h:commandLink>
+                    <h:commandLink value="5" styleClass="custom-link" onclick="handleRSelection(5, this); saveFormData(); return false;"></h:commandLink>
+
+                </div>
+
+                <h:inputHidden id="hiddenX" value="#{resultHandler.x}"/>
+                <h:inputHidden id="hiddenY" value="#{resultHandler.y}"/>
+                <h:inputHidden id="hiddenR" value="#{resultHandler.hiddenR}"/>
+
+                <h:commandButton class="submit-button" value="Вычислить" action="#{resultHandler.setResultParams()}" onclick="submitBtn();"/>
+            </h:form>
+
+
+            <h:form id="form">
+                <p:commandButton value="Очистить" action="#{resultHandler.clean()}" onclick="clearDots(); return false;" update="summaryTable"/>
+            </h:form>
+
+        </div>
+
+        <div class="col-md-5">
+            <div class="form-group">
+                <p:dataTable id="table" value="#{resultHandler.resultList}" var="res">
+
+                    <p:column headerText="X" width="50">
+                        <h:outputText value="#{res.x}"/>
+                    </p:column>
+                    <p:column headerText="Y" width="50">
+                        <h:outputText value="#{res.y}"/>
+                    </p:column>
+                    <p:column headerText="R" width="50">
+                        <h:outputText value="#{res.r}"/>
+                    </p:column>
+                    <p:column headerText="Result" width="100">
+                        <h:outputText value="#{res.hit ? 'Попал' : 'Мимо'}"/>
+                    </p:column>
+                    <p:column headerText="Ex.time (мс)" width="100">
+                        <h:outputText value="#{res.executionTime}"/>
+                    </p:column>
+                    <p:column headerText="Time" width="100">
+                        <h:outputText value="#{res.time}"/>
+                    </p:column>
+
+                </p:dataTable>
+            </div>
+
+            <div class="form-group">
+                <p:dataTable id="summaryTable" value="#{resultHandler.summaryList}" var="summary">
+                    <p:column headerText="Попаданий" width="30">
+                        <h:outputText id="summary_hits" value="#{summary.hits}"/>
+                    </p:column>
+                    <p:column headerText="Промахов" width="30">
+                        <h:outputText id="summary_misses" value="#{summary.misses}"/>
+                    </p:column>
+                    <p:column headerText="попадания/всего %" width="30">
+                        <h:outputText id="summary_percent" value="#{summary.percent}"/>
+                    </p:column>
+                </p:dataTable>
+            </div>
+
+        </div>
+
+    </ui:define>
+</ui:composition>

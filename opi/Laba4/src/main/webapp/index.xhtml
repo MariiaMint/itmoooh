@@ -1,0 +1,17 @@
+<ui:composition template="/WEB-INF/templates/base_template.xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:param name="title" value="Лаба 3"/>
+    <ui:define name="content">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; text-align: center">
+
+            <h:outputText id="clock" style="font-size: 60px" value="#{timeProcessor.currentTime}"/>
+            <p:poll interval="5" listener="#{timeProcessor.updateTime()}" update="clock"/>
+
+            <p:link outcome="/main" value="на главную"/>
+
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,14 @@
+@echo off
+echo Waiting for WildFly to start...
+timeout /t 60 /nobreak >nul
+for /l %%i in (1,1,12) do (
+    curl -s -o nul -w "%%{http_code}" http://localhost:8080 | find "200" >nul
+    if not errorlevel 1 (
+        echo WildFly started successfully!
+        exit /b 0
+    )
+    echo Waiting...
+    timeout /t 5 /nobreak 2> nul
+)
+echo WildFly failed to start within the expected time.
+exit /b 1
