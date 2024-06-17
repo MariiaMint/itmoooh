@@ -7,18 +7,24 @@ import jakarta.persistence.PersistenceContext;
 
 
 @ApplicationScoped
-public class DotCounter {
+public class DotCounter implements DotCounterMBean{
+    private long hits;
+    private long misses;
 
     @PersistenceContext
     private EntityManager em;
 
+
+
     public long countHits() {
-        return em.createQuery("SELECT COUNT(r) FROM ResultBean r WHERE r.isHit = true", Long.class)
+        this.hits = em.createQuery("SELECT COUNT(r) FROM ResultBean r WHERE r.isHit = true", Long.class)
                 .getSingleResult();
+        return hits;
     }
 
     public long countMisses() {
-        return em.createQuery("SELECT COUNT(r) FROM ResultBean r WHERE r.isHit = false", Long.class)
+        this.misses = em.createQuery("SELECT COUNT(r) FROM ResultBean r WHERE r.isHit = false", Long.class)
                 .getSingleResult();
+        return misses;
     }
 }

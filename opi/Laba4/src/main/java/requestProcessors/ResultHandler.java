@@ -13,7 +13,10 @@ import lombok.Getter;
 import lombok.Setter;
 import tools.MessageHandler;
 
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.io.Serializable;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +57,28 @@ public class ResultHandler implements Serializable {
 	private Integer hits;
 	@Getter
 	private Integer misses;
+
+	@PostConstruct
+	public void init() {
+		try {
+			MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
+
+			// Регистрация PercentCounter MBean
+			ObjectName percentCounterName = new ObjectName("beans:type=PercentCounter");
+			PercentCounter percentCounter = new PercentCounter();
+			mbeanServer.registerMBean(percentCounter, percentCounterName);
+
+			// Регистрация DotCounter MBean
+			ObjectName dotCounterName = new ObjectName("beans:type=DotCounter");
+			mbeanServer.registerMBean(counter, dotCounterName);
+
+			System.out.println("MBeans registered successfully.");
+		} catch (Exception e) {
+			System.out.println("MBeans registered not successfully.");
+			e.printStackTrace();
+		}
+	}
+
 
 	public void setResultParams() {
 		ResultBean result = new ResultBean();

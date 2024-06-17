@@ -7,7 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import static java.util.Objects.isNull;
 
 @ApplicationScoped
-public class PercentCounter {
+public class PercentCounter implements PercentCounterMBean {
     @PersistenceContext
     private EntityManager em;
 
